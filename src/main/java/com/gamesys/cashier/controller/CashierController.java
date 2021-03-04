@@ -24,7 +24,7 @@ public class CashierController {
     @PostMapping("/register")
     @ResponseStatus(value = HttpStatus.CREATED, reason = "User Created")
     public User register(@RequestBody User user) {
-        if (hasValidFields(user))
+        if (ValidationUtil.hasValidFields(user))
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST);
 
@@ -46,13 +46,5 @@ public class CashierController {
         cashierService.addCustomer(user);
         return user;
     }
-
-    private boolean hasValidFields(User user) {
-        return !ValidationUtil.isValidUsername(user.getUserName()) &&
-                !ValidationUtil.isValidPassword(user.getPassword()) &&
-                !ValidationUtil.isISOFormat(user.getDateOfBirth()) &&
-                !ValidationUtil.hasPaymentValidLength(user.getPaymentNumber());
-    }
-
 
 }

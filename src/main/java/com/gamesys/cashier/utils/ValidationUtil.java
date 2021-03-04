@@ -1,5 +1,7 @@
 package com.gamesys.cashier.utils;
 
+import com.gamesys.cashier.model.User;
+
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
@@ -92,4 +94,11 @@ public class ValidationUtil {
         return Period.between(LocalDate.parse(dateOfBirth), LocalDate.now()).getYears() >= 18;
     }
 
+
+    public static boolean hasValidFields(User user) {
+        return !isValidUsername(user.getUserName()) &&
+                !isValidPassword(user.getPassword()) &&
+                !isISOFormat(user.getDateOfBirth()) &&
+                !hasPaymentValidLength(user.getPaymentNumber());
+    }
 }
