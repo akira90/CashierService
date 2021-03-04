@@ -18,14 +18,14 @@ public class CashierServiceTest {
 
     @Test
     public void testAddCustomerToRepoIfCustomerDoesNotExist() {
-        Customer customer = Customer
+        var customer = Customer
                 .builder()
                 .userName("MadMax")
                 .build();
         cashierService.addCustomer(customer);
-        Customer customerFromService = cashierService.getCustomerByUserName(customer.getUserName());
+        var customerFromRepo = cashierService.getCustomerByUserName(customer.getUserName());
 
-        assertEquals(customer, customerFromService);
+        assertEquals(customer, customerFromRepo);
     }
 
     @Test
@@ -35,17 +35,29 @@ public class CashierServiceTest {
 
     @Test
     public void testIfCustomerExistsWithExistingUser() {
-        Customer customer = Customer
+        var customer = Customer
                 .builder()
                 .userName("CarlSagan")
                 .build();
         cashierService.addCustomer(customer);
 
-        assertTrue(cashierService.doesCustomerExist(customer.userName));
+        assertTrue(cashierService.doesCustomerExist("CarlSagan"));
     }
 
     @Test
     public void testGetCustomerByUserNameWhenUserIsNotPresent() {
         assertThrows(CustomerException.class, () -> cashierService.getCustomerByUserName("ThisUserDoesNotExist"));
+    }
+
+    @Test
+    public void testGetCustomerByUserNameWhenUserIsPresent() {
+        var customer = Customer
+                .builder()
+                .userName("IsaacNewton")
+                .build();
+        cashierService.addCustomer(customer);
+        var customerFromRepo = cashierService.getCustomerByUserName("IsaacNewton");
+
+        assertEquals(customer, customerFromRepo);
     }
 }

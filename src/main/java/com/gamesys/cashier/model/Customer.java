@@ -7,8 +7,8 @@ import lombok.Getter;
 @Getter
 public class Customer {
 
-    public String userName;
-    public String password;
-    public String dateOfBirth;
-    public String paymentNumber;
+    private final String userName;
+    private final String password;
+    private final String dateOfBirth;
+    private final String paymentNumber;
 }

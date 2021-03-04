@@ -11,6 +11,7 @@ import java.util.Optional;
 @Service
 public class CashierService implements Cashier {
 
+    // This Map functions as the CashierRepo - as a means of persistence.
     private final Map<String, Customer> CUSTOMERS = new HashMap<>();
 
     @Override

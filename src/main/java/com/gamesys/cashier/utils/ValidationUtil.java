@@ -50,9 +50,9 @@ public class ValidationUtil {
      * @return true if paymentNumber is between 15 and 19 digits and does not match the list of numbers in the parameter.
      */
     public static boolean isPaymentNumberValid(String paymentNumber, String[] invalidIssuerNumber) {
-        final String PAYMENT_FROM_OPTIONAL = Optional.ofNullable(paymentNumber).isPresent() ? paymentNumber : "123456";
-        final String[] INVALID_ISSUER_NO_FROM_OPTIONAL = Optional.ofNullable(invalidIssuerNumber).isPresent() ? invalidIssuerNumber : new String[]{};
-        final String SIX_DIGITS_FROM_PAYMENT = PAYMENT_FROM_OPTIONAL.substring(0, 6);
+        final var PAYMENT_FROM_OPTIONAL = Optional.ofNullable(paymentNumber).isPresent() && paymentNumber.length() > 6 ? paymentNumber : "123456";
+        final var INVALID_ISSUER_NO_FROM_OPTIONAL = Optional.ofNullable(invalidIssuerNumber).isPresent() ? invalidIssuerNumber : new String[]{};
+        final var SIX_DIGITS_FROM_PAYMENT = PAYMENT_FROM_OPTIONAL.substring(0, 6);
         boolean isValidIssuerNumber = Arrays.stream(INVALID_ISSUER_NO_FROM_OPTIONAL).noneMatch(SIX_DIGITS_FROM_PAYMENT::contains);
         boolean isValidLength = PAYMENT_FROM_OPTIONAL.matches(ISSUER_NUMBER_REGEX);
         return isValidIssuerNumber && isValidLength;
