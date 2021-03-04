@@ -1,12 +1,25 @@
-# CashierService
-Cashier Service in Sprint Boot.
+# Cashier App
+
+Cashier app - creates a user.
 
 Please execute the following commands to run the app:
 
-## Instructions
+## Getting Started
+
+These instructions should get this project working locally on your machine.
+
+### Prerequisites
+
+```
+java 15 (jdk15+ installed 
+gradle 6.8.3
+```
+### Installation
+
 ```
 gradle build
 ```
+### Running the app
 
 ```
 gradle bootRun
@@ -28,11 +41,14 @@ http://127.0.0.1:8080/register \
 }'
 ```
 
-####The rules for the `JSON` object as follows:
+#### Constrains for the request
 
 
 - Username - alphanumeric, no spaces
 - Password – min length 4, at least one upper case letter & number
 - DoB (Date of Birth) - ISO 8601 format
-- Payment Card Number – between 15 and 19 digits and cannot begin with **2020**.
+- Payment Card Number – between 15 and 19 digits
+
+
+
 
