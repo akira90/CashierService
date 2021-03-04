@@ -1,7 +1,7 @@
 package com.gamesys.cashier.service;
 
 import com.gamesys.cashier.exceptions.CustomerException;
-import com.gamesys.cashier.model.Customer;
+import com.gamesys.cashier.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +18,7 @@ public class CashierServiceTest {
 
     @Test
     public void testAddCustomerToRepoIfCustomerDoesNotExist() {
-        var customer = Customer
+        var customer = User
                 .builder()
                 .userName("MadMax")
                 .build();
@@ -35,7 +35,7 @@ public class CashierServiceTest {
 
     @Test
     public void testIfCustomerExistsWithExistingUser() {
-        var customer = Customer
+        var customer = User
                 .builder()
                 .userName("CarlSagan")
                 .build();
@@ -51,7 +51,7 @@ public class CashierServiceTest {
 
     @Test
     public void testGetCustomerByUserNameWhenUserIsPresent() {
-        var customer = Customer
+        var customer = User
                 .builder()
                 .userName("IsaacNewton")
                 .build();

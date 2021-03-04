@@ -1,7 +1,7 @@
 package com.gamesys.cashier.service;
 
 import com.gamesys.cashier.exceptions.CustomerException;
-import com.gamesys.cashier.model.Customer;
+import com.gamesys.cashier.model.User;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -12,20 +12,20 @@ import java.util.Optional;
 public class CashierService implements Cashier {
 
     // This Map functions as the CashierRepo - as a means of persistence.
-    private final Map<String, Customer> CUSTOMERS = new HashMap<>();
+    private final Map<String, User> customers = new HashMap<>();
 
     @Override
-    public void addCustomer(Customer customer) {
-        CUSTOMERS.putIfAbsent(customer.getUserName(), customer);
+    public void addCustomer(User user) {
+        customers.putIfAbsent(user.getUserName(), user);
     }
 
     @Override
-    public Customer getCustomerByUserName(String userName) {
-        return Optional.ofNullable(CUSTOMERS.get(userName)).orElseThrow(() -> new CustomerException("Customer does not exist. " + userName ));
+    public User getCustomerByUserName(String userName) {
+        return Optional.ofNullable(customers.get(userName)).orElseThrow(() -> new CustomerException("Customer does not exist. " + userName ));
     }
 
     @Override
     public boolean doesCustomerExist(String userName) {
-        return CUSTOMERS.containsKey(userName);
+        return customers.containsKey(userName);
     }
 }

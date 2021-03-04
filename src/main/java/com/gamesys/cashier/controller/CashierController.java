@@ -1,33 +1,59 @@
 package com.gamesys.cashier.controller;
 
-import com.gamesys.cashier.model.Customer;
-import com.gamesys.cashier.service.Cashier;
+import com.gamesys.cashier.model.User;
+import com.gamesys.cashier.service.CashierService;
 import com.gamesys.cashier.utils.ValidationUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 
 @RestController
 public class CashierController {
 
-    private final Cashier cashierService;
+    private final CashierService cashierService;
 
-    @Autowired
-    public CashierController(Cashier cashierService) {
+    public CashierController(CashierService cashierService) {
         this.cashierService = cashierService;
     }
 
     @PostMapping("/register")
-    public Integer register(@RequestBody Customer customer) {
-        if (!ValidationUtil.isValidUsername(customer.getUserName()) &&
-            !ValidationUtil.isValidPassword(customer.getPassword()) &&
-            !ValidationUtil.isISOFormat(customer.getDateOfBirth()) &&
-            !ValidationUtil.isPaymentNumberValid(customer.getPaymentNumber(), new String[]{"202021"})
-        ) return new ResponseEntity<>(HttpStatus.BAD_REQUEST).getStatusCodeValue();
-        return new ResponseEntity<>(customer, HttpStatus.CREATED).getStatusCodeValue();
+    @ResponseStatus(value = HttpStatus.CREATED, reason = "User Created")
+    public User register(@RequestBody User user) {
+        if (hasValidFields(user))
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST);
+
+        if (!ValidationUtil.isAboveAgeRequirement(user.getDateOfBirth()))
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    "User is under aged.");
+
+        if (cashierService.doesCustomerExist(user.getUserName()))
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    user.getUserName() + " already exists.");
+
+        if (!ValidationUtil.isPaymentNumberValid(user.getPaymentNumber(), new String[]{"202021"}))
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_ACCEPTABLE,
+                    "Invalid payment issuer number starting with 202021");
+
+        cashierService.addCustomer(user);
+//        return new ResponseEntity<>(HttpStatus.CREATED).getStatusCodeValue();
+        return user;
     }
+
+    private boolean hasValidFields(User user) {
+        return !ValidationUtil.isValidUsername(user.getUserName()) &&
+                !ValidationUtil.isValidPassword(user.getPassword()) &&
+                !ValidationUtil.isISOFormat(user.getDateOfBirth()) &&
+                !ValidationUtil.hasPaymentValidLength(user.getPaymentNumber());
+    }
+
+
 }

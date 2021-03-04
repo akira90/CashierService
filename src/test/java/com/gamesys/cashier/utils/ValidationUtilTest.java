@@ -53,27 +53,40 @@ public class ValidationUtilTest {
 
     @Test
     public void testIfPaymentIssuerIdentificationNumberIsValid() {
+        // 14 digits
+        assertFalse(ValidationUtil.hasPaymentValidLength("34929308105442"));
         // 15 digits
-        assertTrue(ValidationUtil.isPaymentNumberValid("349293081054422", INVALID_ISSUER_NUMBERS));
+        assertTrue(ValidationUtil.hasPaymentValidLength("349293081054422"));
         // 16 digits
-        assertTrue(ValidationUtil.isPaymentNumberValid("3492930810544221", INVALID_ISSUER_NUMBERS));
+        assertTrue(ValidationUtil.hasPaymentValidLength("3492930810544221"));
         // 17 digits
-        assertTrue(ValidationUtil.isPaymentNumberValid("34929308105442212", INVALID_ISSUER_NUMBERS));
+        assertTrue(ValidationUtil.hasPaymentValidLength("34929308105442212"));
         // 18 digits
-        assertTrue(ValidationUtil.isPaymentNumberValid("349293081054422123", INVALID_ISSUER_NUMBERS));
+        assertTrue(ValidationUtil.hasPaymentValidLength("349293081054422123"));
         // 19 digits
-        assertTrue(ValidationUtil.isPaymentNumberValid("3492930810544221234", INVALID_ISSUER_NUMBERS));
+        assertTrue(ValidationUtil.hasPaymentValidLength("3492930810544221234"));
     }
 
     @Test
     public void testIfPaymentIssuerIdentificationNumberIsInValid() {
-        // 14 digits
-        assertFalse(ValidationUtil.isPaymentNumberValid("34929308105442", INVALID_ISSUER_NUMBERS));
         assertFalse(ValidationUtil.isPaymentNumberValid(INVALID_ONE + "0810544251823", INVALID_ISSUER_NUMBERS));
         assertFalse(ValidationUtil.isPaymentNumberValid(INVALID_TWO + "928412i320901", INVALID_ISSUER_NUMBERS));
         assertFalse(ValidationUtil.isPaymentNumberValid(INVALID_THREE + "19375819419239", INVALID_ISSUER_NUMBERS));
         assertFalse(ValidationUtil.isPaymentNumberValid("abcedfghajeruti!", INVALID_ISSUER_NUMBERS));
         assertFalse(ValidationUtil.isPaymentNumberValid(null, INVALID_ISSUER_NUMBERS));
         assertFalse(ValidationUtil.isPaymentNumberValid(null, null));
+    }
+
+    @Test
+    public void testIfAgeIsAbove18WithNonNullValues() {
+        assertTrue(ValidationUtil.isAboveAgeRequirement("1991-04-10"));
+        assertFalse(ValidationUtil.isAboveAgeRequirement("2005-01-10"));
+        assertFalse(ValidationUtil.isAboveAgeRequirement("01-01-10"));
+    }
+
+    @Test
+    public void testIfAgeIsAbove18WithEmptyValues() {
+        assertFalse(ValidationUtil.isAboveAgeRequirement(""));
+        assertFalse(ValidationUtil.isAboveAgeRequirement(null));
     }
 }
