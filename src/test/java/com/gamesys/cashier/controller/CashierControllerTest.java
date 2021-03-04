@@ -1,22 +1,20 @@
 package com.gamesys.cashier.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gamesys.cashier.model.User;
 import com.gamesys.cashier.service.CashierService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.server.ResponseStatusException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -25,8 +23,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class CashierControllerTest {
 
     private CashierController cashierController;
-    @Mock
-    private CashierService cashierService;
     private ObjectMapper mapper;
 
     @Autowired
@@ -34,12 +30,13 @@ public class CashierControllerTest {
 
     @BeforeEach
     public void seUp() {
+        CashierService cashierService = mock(CashierService.class);
         cashierController = new CashierController(cashierService);
         mapper = new ObjectMapper();
     }
 
     @Test
-    public void testRegisterEndpointReturnsStatusCode201() throws Exception{
+    public void testRegisterEndpointReturnsStatusCode201() throws Exception {
         var user = User
                 .builder()
                 .userName("MadMax")
@@ -86,7 +83,6 @@ public class CashierControllerTest {
                 .paymentNumber("349293081054422")
                 .build();
 
-        //assertEquals(HttpStatus.FORBIDDEN.value(), cashierController.register(user));
         mockMvc.perform(post("/register")
                 .content(mapper.writeValueAsString(user))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -94,26 +90,6 @@ public class CashierControllerTest {
                 .andExpect(status().isForbidden())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof ResponseStatusException));
     }
-
-    // commented out due to the fact that it wasn't injecting my mock service into the controller.
-//    @Test
-//    public void testIfUserNameAlreadyExistsAndReturnHttpStatus409() throws Exception {
-//        when(cashierService.doesCustomerExist(anyString())).thenReturn(true);
-//        var customer = Customer
-//                .builder()
-//                .userName("BjornBjorg")
-//                .password("Grandslam11")
-//                .dateOfBirth("1956-06-06")
-//                .paymentNumber("349293081054422")
-//                .build();
-//
-//        mockMvc.perform(post("/register")
-//                .content(mapper.writeValueAsString(customer))
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isConflict())
-//                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ResponseStatusException));
-//    }
 
     @Test
     public void testIfPaymentIssuerNumberIsAllowedAndReturnHttpStatus406() throws Exception {
@@ -131,7 +107,6 @@ public class CashierControllerTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotAcceptable())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof ResponseStatusException));
-
     }
 
 }

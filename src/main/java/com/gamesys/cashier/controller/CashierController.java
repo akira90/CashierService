@@ -44,7 +44,6 @@ public class CashierController {
                     "Invalid payment issuer number starting with 202021");
 
         cashierService.addCustomer(user);
-//        return new ResponseEntity<>(HttpStatus.CREATED).getStatusCodeValue();
         return user;
     }
 
